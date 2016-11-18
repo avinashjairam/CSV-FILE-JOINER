@@ -1,5 +1,6 @@
 import java.io.*;
 import java.util.*;
+import java.sql.*;
 
 public class  CsvFileJoiner{
 	
@@ -53,6 +54,17 @@ public class  CsvFileJoiner{
 		CsvFileJoiner obj = new CsvFileJoiner();
 		obj.selectJoinType(args);
 		obj.readFile();
+
+		String url ="jdbc:postgresql://localhost/test";
+		Connection c = null;
+		try{
+
+		} catch (Exception e){
+			e.printStackTrace();
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			System.exit(0);
+		}
+		System.out.println("Opened database successfully");	
 
 
 	}
