@@ -1,6 +1,9 @@
 import java.io.*;
 import java.util.*;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 public class  CsvFileJoiner{
 	
@@ -55,10 +58,30 @@ public class  CsvFileJoiner{
 		obj.selectJoinType(args);
 		obj.readFile();
 
-		String url ="jdbc:postgresql://localhost/test";
+	
 		Connection c = null;
-		try{
+		Statement stmt = null;
 
+	
+		try{
+			Class.forName("org.postgresql.Driver");
+			c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/avi", "avi", "avi");
+			c.setAutoCommit(false);
+
+			stmt=c.createStatement();
+
+			ResultSet rs = stmt.executeQuery("SELECT * FROM DIVIDENDS LIMIT 10;");
+
+			while(rs.next()){
+				System.out.println(rs.getString("tdate"));
+
+
+			}
+
+			rs.close();
+			stmt.close();
+			c.close();
+			
 		} catch (Exception e){
 			e.printStackTrace();
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
