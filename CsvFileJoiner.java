@@ -21,7 +21,7 @@ public class  CsvFileJoiner{
 		initializeInputObjects();
 	}
 
-	public void initializeInputObjects() throws FileNotFoundException{
+	public void initializeInputObjects(){
 
 		try{
 			file1 = new File("dividends.head");
@@ -73,10 +73,27 @@ public class  CsvFileJoiner{
 	}
 
 	public  void readFile(){
-		while(input1.hasNext()){
+		/*while(input1.hasNext()){
 			System.out.println(input1.next());
 		}
+
+		while(input2.hasNext()){
+			System.out.println(input2.next());
+		}
+
+		while(input3.hasNext()){
+			System.out.println(input3.next());
+		}
+
+		while(input2.hasNext()){
+			System.out.println(input2.next());
+		}*/
+
+		int count = 0;
+
+		while(count<10){
+			System.out.println(input6.next());
+			count++;
+		}
 	}
-
-
 }
