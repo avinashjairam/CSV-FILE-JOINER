@@ -124,21 +124,37 @@ public class  CsvFileJoiner{
 		return value.substring(value.indexOf(",") + 1 );
 	}
 
+	public void resetFileReaderPosition(){
+		stdin2= null;
+		try{
+			stdin2 = new Scanner(file2);
+		}
+		catch(Exception ex){
+			System.out.println(ex.getMessage());
+		}
+	}	
 
 
 	public void innerLoopJoin(){
+		String record1;
+		String record2;
 		while(this.stdin1.hasNext()){
+			record1=stdin1.next();
 			while(this.stdin2.hasNext()){
-				if( this.getKey(stdin1.next()).equals( this.getKey(stdin2.next())) ){
-				//	System.out.println("ehy");
+				record2=stdin2.next();
+				if( this.getKey(record1).equals( this.getKey(record2) ) ){
+					System.out.println(this.getKey(record1) + " " + this.getMatchingRecord(record1) + " " + this.getMatchingRecord(record2));
 				//	System.out.println(this.getKey(stdin1.next()) + " " + this.getKey(stdin2.next()) );
 				//	this.getKey(stdin1.next()).equals( this.getKey(stdin2.next())
 				//System.out.println(this.getKey(stdin1.next()) + " " + this.getMatchingRecord(stdin1.next()) + " " + this.getMatchingRecord(stdin2.next()) );
-				System.out.println(this.stdin2.next());	
-			}
-			//	System.out.println(this.stdin1.next() + " " + this.stdin2.next());
+			//		Object one = stdin1.next();
+			//		System.out.println(one);	
+				}
+			//	System.out.println(getKey(record1) + " " + getKey(record2));
+			//	System.out.println(this.stdin1.next() /* + " " + this.stdin2.next() */);
 			//	System.out.println(this.getKey(stdin1.next()) + " " + this.getKey(stdin2.next()));
 			}
+			resetFileReaderPosition();
 		}
 		
 	}	
