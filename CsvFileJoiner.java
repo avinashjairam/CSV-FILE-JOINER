@@ -12,7 +12,10 @@ public class  CsvFileJoiner{
 	
 	private Scanner stdin1;
 	private Scanner stdin2;
-	
+
+	private List<String> list1;
+	private List<String>  list2;
+		
 	public CsvFileJoiner(String input1, String input2){
 		initializeInputObjects(input1, input2);
 	}
@@ -25,9 +28,9 @@ public class  CsvFileJoiner{
 			
 			stdin1 = new Scanner(file1);
 			stdin2 = new Scanner(file2);
-	
 
-		//	System.out.println(stdin2.next());	
+			list1 = new ArrayList();
+			list2 = new ArrayList();
 		}
 		catch (FileNotFoundException ex){
 			System.out.println("Unable to read file");
@@ -83,7 +86,7 @@ public class  CsvFileJoiner{
 
 	public void selectJoinType(String  type){
 		if("merge_join".equals(type)){
-			System.out.println("merge join");
+			mergeJoin();
 		}
 		else if ("inner_loop_join".equals(type)){
 			innerLoopJoin();
@@ -99,21 +102,48 @@ public class  CsvFileJoiner{
 
 	public  void readFile(){
 		while(stdin1.hasNext()){
-			
+			list1.add(stdin1.next());	
 		}
 
 		while(stdin2.hasNext()){
-			System.out.println(stdin2.next());
+			list2.add(stdin2.next());
+		}
+	}
+
+	public void mergeJoin(){
+		readFile();
+		
+		Collections.sort(list1);
+		Collections.sort(list2);
+		
+		int index = 0;
+
+		int compare;
+          
+		int sizeList1 = list1.size();
+		int sizeList2 = list2.size();
+
+		String record1, record2;
+
+		while((index < list1.size() -1) && (index < list2.size() -1)){
+			record1 = getKey(list1.get(index));
+			record2 = getKey(list2.get(index));
+
+			compare = record1.compareTo(record2);
+			
+			System.out.println(compare);
+			if(compare == 0){
+				System.out.println(record1 + " " + getMatchingRecord(list1.get(index)) + " " + getMatchingRecord(list2.get(index)));
+			}
+
+			index++;
 		}
 
-		/*
+/*		for(int i =0; i <list1.size(); i++){
+			System.out.println(list1.get(i));
+		}
+*/
 
-		int count = 0;
-
-		while(count<10){
-			System.out.println(input6.next());
-			count++;
-		} */
 	}
 
 	public String getKey(String value){
