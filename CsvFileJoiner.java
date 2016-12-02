@@ -116,35 +116,52 @@ public class  CsvFileJoiner{
 		Collections.sort(list1);
 		Collections.sort(list2);
 		
-		int index = 0;
+		int index1 = 0;
+		int index2 = 0;
 
 		int compare;
           
 		int sizeList1 = list1.size();
 		int sizeList2 = list2.size();
+		
+	
 
 		String record1, record2;
 
-		while((index < list1.size() -1) && (index < list2.size() -1)){
-			record1 = getKey(list1.get(index));
-			record2 = getKey(list2.get(index));
+		while(index1  < list1.size()  && index2 < list2.size()){
+			record1 = getKey(list1.get(index1));
+			record2 = getKey(list2.get(index2));
 
 			compare = record1.compareTo(record2);
 			
-			System.out.println(compare);
 			if(compare == 0){
-				System.out.println(record1 + " " + getMatchingRecord(list1.get(index)) + " " + getMatchingRecord(list2.get(index)));
+				System.out.println(record1 + " " + getMatchingRecord(list1.get(index1)) + " " + getMatchingRecord(list2.get(index2)));
+				index2++;
 			}
+			else if(compare < 0){
+				index1++;
+			}
+			else{
+				index2++;
+			}
+	
+	
 
-			index++;
+		
 		}
 
-/*		for(int i =0; i <list1.size(); i++){
-			System.out.println(list1.get(i));
-		}
-*/
+//		printList(list1);
+//		printList(list2);
 
 	}
+
+	public void printList(List list){
+		for(int i =0; i <list.size(); i++){
+			System.out.println(list.get(i));
+		}
+
+	}
+
 
 	public String getKey(String value){
 		return value.substring(0,value.indexOf(","));
