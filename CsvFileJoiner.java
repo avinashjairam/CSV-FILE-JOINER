@@ -93,6 +93,7 @@ public class  CsvFileJoiner{
 			System.out.println(type);
 		}
 		else if("hash_join".equals(type)){
+			hashJoin();
 			System.out.println("hash join");
 		}
 		else{
@@ -108,6 +109,54 @@ public class  CsvFileJoiner{
 		while(stdin2.hasNext()){
 			list2.add(stdin2.next());
 		}
+	}
+
+	public void hashJoin(){
+		int length1 = list1.size();
+		int length2 = list2.size();
+
+		Map<String, String> map = new HashMap<String, String>();
+
+		//String hashCode,record;
+
+		/*if(length1 < length2){
+			doHash(list1,map);
+		}
+		else{
+			doHash(list2,map);
+		}*/
+
+		doHash(map);
+	
+		System.out.println(list1.size() + " " + list2.size());
+
+		for(Map.Entry<String,String> entry: map.entrySet()){
+			String key = entry.getKey().toString();
+			String value =entry.getValue();
+
+			System.out.println(key  + " " + value);
+		}
+
+		
+	}
+
+	public void doHash( Map<String,String> map){
+		readFile();
+
+		String hashCode,record;
+	//		tableList = new ArrayList();
+	//	System.out.println(tableList.size());
+		for(int i=0; i < list1.size(); i++){
+			hashCode = getHashKey(Integer.parseInt(getKey(list1.get(i))));
+			record = list1.get(i);
+			map.put(hashCode,record);
+//			System.out.println(record);
+		}
+	}
+
+	public String getHashKey(int index){
+		return Integer.toString((index * index) % 10); 
+
 	}
 
 	public void mergeJoin(){
