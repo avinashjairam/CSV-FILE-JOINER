@@ -1,5 +1,8 @@
 import java.io.*;
 import java.util.*;
+//import com.google.common.collect.ArrayListMultimap;
+//import org.apache.commons.collections.map.MultiValueMap;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -19,6 +22,44 @@ public class  CsvFileJoiner{
 	public CsvFileJoiner(String input1, String input2){
 		initializeInputObjects(input1, input2);
 	}
+
+	public void hashJoin(){
+		int length1 = list1.size();
+		int length2 = list2.size();
+
+		Map<Integer, List<String>> smallerMap = new LinkedHashMap<Integer, List<String>>();
+		Map<Integer, List<String>> largerMap = new LinkedHashMap<Integer, List<String>>();
+
+		
+		int hashKey;
+		
+		List<String> t1Val;
+		int t1ValKey;
+		
+		//the doHash() method loops through the smaller table and stores teh value in a hash (smallerMap)
+		if(list1.size() < list2.size()){
+			doHash(smallerMap,list1);
+//			doHash(largerMap,list2);
+		}
+		else{
+			doHash(smallerMap,list2);
+//			doHash(largerMap,list1);
+		}
+
+		//Now looping through the larger table and storing the values in a hash
+
+		for(int j=0; j<list2.size(); j++){
+			hashKey = getHashKey(Integer.parseInt(getKey(list2.get(j))));
+	//		System.out.println(smallerMap.get(hashKey) + " " + list2.get(j) );	
+		System.out.println(smallerMap.get(hashKey) + list2.get(j));
+	//		System.out.println(smallerMap.get(j)  + " " + list2.get(j) );	
+		}
+	}
+
+
+
+
+
 
 	public void initializeInputObjects(String input1, String input2){
 
@@ -86,6 +127,7 @@ public class  CsvFileJoiner{
 
 	public void selectJoinType(String  type){
 		if("merge_join".equals(type)){
+			readFile();
 			mergeJoin();
 		}
 		else if ("inner_loop_join".equals(type)){
@@ -93,6 +135,7 @@ public class  CsvFileJoiner{
 			System.out.println(type);
 		}
 		else if("hash_join".equals(type)){
+			readFile();
 			hashJoin();
 			System.out.println("hash join");
 		}
@@ -111,56 +154,37 @@ public class  CsvFileJoiner{
 		}
 	}
 
-	public void hashJoin(){
-		int length1 = list1.size();
-		int length2 = list2.size();
 
-		Map<String, String> map = new HashMap<String, String>();
+	public void doHash( Map<Integer,List<String>> map, List<String> list){
+	//		readFile();
 
-		//String hashCode,record;
-
-		/*if(length1 < length2){
-			doHash(list1,map);
-		}
-		else{
-			doHash(list2,map);
-		}*/
-
-		doHash(map);
-	
-		System.out.println(list1.size() + " " + list2.size());
-
-		for(Map.Entry<String,String> entry: map.entrySet()){
-			String key = entry.getKey().toString();
-			String value =entry.getValue();
-
-			System.out.println(key  + " " + value);
-		}
-
-		
-	}
-
-	public void doHash( Map<String,String> map){
-		readFile();
-
-		String hashCode,record;
+		int hashKey;
+		String record;
 	//		tableList = new ArrayList();
 	//	System.out.println(tableList.size());
-		for(int i=0; i < list1.size(); i++){
-			hashCode = getHashKey(Integer.parseInt(getKey(list1.get(i))));
-			record = list1.get(i);
-			map.put(hashCode,record);
-//			System.out.println(record);
+		for(int i=0; i < list.size(); i++){
+			hashKey = getHashKey(Integer.parseInt(getKey(list.get(i))));
+			record = list.get(i);
+		
+			if(!map.containsKey(hashKey)){
+				map.put(hashKey, new LinkedList<String>());
+
+			}
+		//	System.out.println("hashkey is " + hashKey);			
+			map.get(hashKey).add(record);
+		
+		//	System.out.println(map);
 		}
+		System.out.println("\n");
 	}
 
-	public String getHashKey(int index){
-		return Integer.toString((index * index) % 10); 
+	public  int  getHashKey(int index){
+		return (index * index) % 10; 
 
 	}
 
 	public void mergeJoin(){
-		readFile();
+//		readFile();
 		
 		Collections.sort(list1);
 		Collections.sort(list2);
