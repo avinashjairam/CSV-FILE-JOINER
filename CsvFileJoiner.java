@@ -1,3 +1,7 @@
+
+
+
+
 import java.io.*;
 import java.util.*;
 
@@ -70,47 +74,6 @@ public class  CsvFileJoiner{
 			System.out.println("Unable to read file");
 		}
 	}	
-/*
-	public void hashJoin(){
-		int length1 = list1.size();
-		int length2 = list2.size();
-
-
-		Map<Integer, List<String>> smallerMap = new LinkedHashMap<Integer, List<String>>();
-		Map<Integer, List<String>> largerMap = new LinkedHashMap<Integer, List<String>>();
-
-		
-		int hashKey;
-		
-		List<String> t1Val;
-		int t1ValKey;
-		
-		//the doHash() method loops through the smaller table and stores teh value in a hash (smallerMap)
-		if(list1.size() <= list2.size()){
-
-			doHash(smallerMap,list1);
-	
-			for(int j=0; j<list2.size(); j++){
-				hashKey = getHashKey(Integer.parseInt(getKey(list2.get(j))));
-				if(Integer.parseInt(getKey(smallerMap.get(hashKey).get(0))) ==  Integer.parseInt(getKey(list2.get(j))) ){
-					System.out.println(smallerMap.get(hashKey).get(0) + " " + getMatchingRecord(list2.get(j)));
-				}
-			}
-		}
-		else{
-			doHash(smallerMap,list2);
-	
-			for(int j=0; j<list1.size(); j++){
-				hashKey = getHashKey(Integer.parseInt(getKey(list1.get(j))));
-				if(Integer.parseInt(getKey(smallerMap.get(hashKey).get(0))) ==  Integer.parseInt(getKey(list1.get(j))) ){
-					System.out.println(smallerMap.get(hashKey).get(0) + " " + getMatchingRecord(list1.get(j)));
-				}
-			}
-		}
-
-	
-	}
-*/
 
  public void hashJoin(){
                 
@@ -186,22 +149,6 @@ public class  CsvFileJoiner{
 	}
 
 
-/*	public void doHash( Map<Integer,List<String>> map, List<String> list){
-	
-		int hashKey;
-		String record;
-		
-		for(int i=0; i < list.size(); i++){
-			hashKey = getHashKey(Integer.parseInt(getKey(list.get(i))));
-			record = list.get(i);
-		
-			if(!map.containsKey(hashKey)){
-				map.put(hashKey, new LinkedList<String>());
-
-			}
-			map.get(hashKey).add(record);
-		}
-	}*/
 	public void doHash( Map<Integer,List<String>> map, List<Record> list){
 	
 		int hashKey;
@@ -226,9 +173,7 @@ public class  CsvFileJoiner{
 
 	public void mergeJoin(){
 		
-	//	Collections.sort(list1);
-	//	Collections.sort(list2);
-	
+
 		sortRecordList(records1);
 		sortRecordList(records2);	
 		int index1 = 0;
@@ -239,38 +184,11 @@ public class  CsvFileJoiner{
 		int sizeList1 = list1.size();
 		int sizeList2 = list2.size();
 		
-//		System.out.println(records1);
-//		System.out.println(records2);
-
-/*		for(Record record: records1){
-			System.out.println(record.getKey() + " " + record.getRecord());
-		}
-
-		for(Record record: records2){
-			System.out.println(record.getKey() + " " + record.getRecord());
-		}*/
 
 
 		int key1, key2;
 
-	/*	while(index1  < list1.size()  && index2 < list2.size()){
-			record1 = getKey(list1.get(index1));
-			record2 = getKey(list2.get(index2));
-
-			compare = record1.compareTo(record2);
-			
-			if(compare == 0){
-				System.out.println(record1 + " " + getMatchingRecord(list1.get(index1)) + " " + getMatchingRecord(list2.get(index2)));
-				index2++;
-			}
-			else if(compare < 0){
-				index1++;
-			}
-			else{
-				index2++;
-			}
-		}*/
-		while(index1  < records1.size()  && index2 < records2.size()){
+	while(index1  < records1.size()  && index2 < records2.size()){
 			key1 = records1.get(index1).getKey();
 			key2 = records2.get(index2).getKey();
 
@@ -340,21 +258,7 @@ public class  CsvFileJoiner{
 	}	
 
 
-/*	public void innerLoopJoin(){
-		String record1;
-		String record2;
-		while(this.stdin1.hasNext()){
-			record1=stdin1.next();
-			while(this.stdin2.hasNext()){
-				record2=stdin2.next();
-				if( this.getKey(record1).equals( this.getKey(record2) ) ){
-					System.out.println(this.getKey(record1) + " " + this.getMatchingRecord(record1) + " " + this.getMatchingRecord(record2));
-				}
-				resetFileReaderPosition();
-			}
-		}
-	}
-*/
+
 	public void innerLoopJoin(){
 		int key1,key2;
 		
