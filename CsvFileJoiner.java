@@ -162,8 +162,9 @@ public class  CsvFileJoiner{
 	//The hashJoin() method
 	public void hashJoin(){
                 
-       		//A 2 dimensional map consisting of type Integer and a String List 
-      		 //Data from the smaller talbe is stored here. The hashcode is stored as an integer and the corresponding values in a String List<> 
+       		//A 2 part map consisting of type Integer and a String List. A regular map doesn't allow duplicate hashkeys. Hence records with the same hashkey
+		//are stored in a list. 
+      		 //Data from the smaller table is stored here. The hashcode is stored as an integer and the corresponding values in a String List<> 
 	        Map<Integer, List<String>> smallerMap = new LinkedHashMap<Integer, List<String>>();
        
        		int hashKey;
@@ -204,54 +205,62 @@ public class  CsvFileJoiner{
 
 
 	
-
-	
-
-
-
-
-
-
+	//The doHash() method receives two parameters, the two part Integer and List<String> map, and a List of Record Objects
+	//The list of record objects correspond to the data in the smaller table/list
+	 //creates a hash from the key and stores it in the Integer part of the map. The corresponding
+	//row  is stored in the String part of the map.
 	public void doHash( Map<Integer,List<String>> map, List<Record> list){
 	
 		int hashKey;
 		String record;
 		
 		for(int i=0; i < list.size(); i++){
+			//Generating the hashkey by extracting the actual key and passing it to the getHashKeyFunction
 			hashKey = getHashKey(list.get(i).getKey());
+			//Extracting the data from the row (the record which corresponds to the key)
+			//Record here means a single  entire row which includes the key
 			record = list.get(i).getKey() + "," + list.get(i).getRecord();
-		
+		   
+			//If a key isn't already  inserted in the map, insert it and create a new LinkedList of String type.
+			//This is done to deal with collisions becuase the map cannot have multiple keys. Hence, records which map to the
+			//same hashkey are stored in a linkedlist which is mapped to that hashkey
 			if(!map.containsKey(hashKey)){
 				map.put(hashKey, new LinkedList<String>());
 
 			}
+
+			//If the hashhey already exists, just add the record to the linked list which is mapped to the key
 			map.get(hashKey).add(record);
 		}
 	}
 
+	//The getHashKey() method receives the key of the raw data from the individual table row.
+	//It calculates the hash by squaring it and finding its modulus' by a factor of it. It then returns this value
 	public  int  getHashKey(int index){
 		return (index * index) % 10; 
 
 	}
 
+	//The mergJoint() method peforms a mergeJoin on the two data sets and prints the result
 	public void mergeJoin(){
 		
-
+		//Both records lists must be sorted before the merge join can be performed. The sortRecordList() method does this
 		sortRecordList(records1);
 		sortRecordList(records2);	
+
+		//Theses indexes will be used in the traversal of both lists. They are intitialezd to 0
 		int index1 = 0;
 		int index2 = 0;
 
-		int compare;
-          
-		int sizeList1 = list1.size();
-		int sizeList2 = list2.size();
-		
-
-
+		//Keys from each row of both tables 	
 		int key1, key2;
 
-	while(index1  < records1.size()  && index2 < records2.size()){
+		//While not at the end of both lists, extract the key the keys of the first 2 rows in the tables
+		//If they are equal, they are a match and output the records and increment the index of the second table
+		//If the key in the first table is less than that of the second table, increment the index of the first table
+		//If the key in the first table is larger, increment the index in the second table . Repeat this process until
+		// the end of both table (lists) are reached
+		while(index1  < records1.size()  && index2 < records2.size()){
 			key1 = records1.get(index1).getKey();
 			key2 = records2.get(index2).getKey();
 
@@ -267,15 +276,12 @@ public class  CsvFileJoiner{
 				index2++;
 			}
 		}
-
-
-
-
-
-
-
 	}
 
+	//The sortRecordList() method uses the Java Collections sort method  to sort a list of Record Objects based on their keys
+	//It utilizes the Comparator intefrace from the java.util package and implements the compare methods to determine which 
+	// Record object has the larger key. This enables the sort method to tell which object has the larger value and move it
+	// to the relevant location.  
 	public void sortRecordList(List<Record>list){
  		Collections.sort(list, new Comparator<Record>() {
             
@@ -294,17 +300,9 @@ public class  CsvFileJoiner{
 	}
 	
 
-	public void printList(List list){
-		for(int i =0; i <list.size(); i++){
-			System.out.println(list.get(i));
-		}
-
-	}
-
-
-
-
-
+	//The innerLoopJoin() method performs an innerJoin on the records
+	//It compares each key in the first table to those in the second table
+	//If there is a match, the corresponding rows are printed
 	public void innerLoopJoin(){
 		int key1,key2;
 		
@@ -318,13 +316,6 @@ public class  CsvFileJoiner{
 			}
 		}
 	}
-
-
-
-	
-
-
-
 }
 
 
